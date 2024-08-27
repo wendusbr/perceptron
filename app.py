@@ -1,22 +1,25 @@
-def treinaPerceptron(w, N, treino):
-    ciclos = 0
+def perceptronTrain(w, n, x):
+    # w: Array de pesos [w0, w1, w2, ...]
+    # n: Taxa de aprendizagem
+    # x: Matriz de entradas com última coluna sempre yd [[x0, x1, x2, ..., yd], [x0, x1, x2, ..., yd], ...]
+
+    cycles = 0
 
     while(True):
-        ciclos += 1
-        print(f"Ciclo {ciclos}")
+        cycles += 1
 
         repeat = False
-        for i in range(len(treino)):
+        for i in range(len(x)):
+            yd = x[i][len(x)-1]
 
-            somatorio = 0.0
-            yd = treino[i][len(treino)-1]
+            sum = 0.0
+
             for j in range(len(w)):
-                somatorio += w[j]*treino[i][j]
+                sum += w[j]*x[i][j]
             
-            # Considerar apenas duas casas decimais
-            somatorio = float("{:.2f}".format(somatorio))
+            sum = float("{:.2f}".format(sum)) # Considerar apenas duas casas decimais
 
-            if(somatorio >= 0):
+            if(sum >= 0):
                 y = 1
             else:
                 y = 0
@@ -24,12 +27,41 @@ def treinaPerceptron(w, N, treino):
             if(yd != y):
                 repeat = True
                 for j in range(len(w)):
-                    w[j] = w[j] + N*treino[i][j]*(yd - y)
+                    w[j] = w[j] + n*x[i][j]*(yd - y)
 
-        print(w)
         if(not repeat):
             break
     
-    print("Vetor w final:\n", w)
+    print("Ciclos:", cycles)
+    print("w:", w)
 
-treinaPerceptron([0.1, 0.2, -0.2, -0.2, -0.3], 0.4, [[1, 1, 1, 0, 1, 0], [1, 0, 0, 1, 0, 1], [1, 1, 1, 0, 0, 1], [1, 1, 0, 1, 1, 0], [1 ,1, 0, 0, 1, 1], [1, 0, 0, 1, 1, 0]])
+def perceptronOutput(w, x):
+    # w: Array de pesos [w0, w1, w2, ...]
+    # x: Linha de entradas sem coluna yd [x0, x1, x2, ...]
+
+    sum = 0.0
+    for i in range(len(w)):
+        sum += w[i]*x[i]
+    
+    sum = float("{:.2f}".format(sum)) # Considerar apenas duas casas decimais
+
+    if(sum >= 0):
+        y = 1
+    else:
+        y = 0
+    
+    print("Somatório:", sum)
+    print("y:", y)
+
+# Entradas
+w = [-0.5, 0.4, -0.6, 0.6]
+n = 0.3
+x = [[1, 0, 0, 1, 0], [1, 1, 1, 0, 1]]
+inputs = [[1, 1, 1, 1], [1, 0, 0, 0], [1, 1, 0, 0], [1, 0, 1, 1]]
+
+print("---Treinamento---")
+perceptronTrain(w, n, x)
+
+print("\n---Novas Entradas---")
+for i in inputs:
+    perceptronOutput(w, i)
