@@ -1,7 +1,8 @@
-def perceptronTrain(w, n, x):
+def perceptronTrain(w, n, x, yd):
     # w: Array de pesos [w0, w1, w2, ...]
     # n: Taxa de aprendizagem
-    # x: Matriz de entradas com última coluna sempre yd [[x0, x1, x2, ..., yd], [x0, x1, x2, ..., yd], ...]
+    # x: Matriz de entradas[[x0, x1, x2, ...], [x0, x1, x2, ...], ...]
+    # yd: Array de saídas esperadas
 
     cycles = 0
 
@@ -10,8 +11,6 @@ def perceptronTrain(w, n, x):
 
         repeat = False
         for i in range(len(x)):
-            yd = x[i][len(x)-1]
-
             sum = 0.0
 
             for j in range(len(w)):
@@ -24,10 +23,10 @@ def perceptronTrain(w, n, x):
             else:
                 y = 0
 
-            if(yd != y):
+            if(yd[i] != y):
                 repeat = True
                 for j in range(len(w)):
-                    w[j] = w[j] + n*x[i][j]*(yd - y)
+                    w[j] = w[j] + n*x[i][j]*(yd[i] - y)
 
         if(not repeat):
             break
@@ -37,7 +36,7 @@ def perceptronTrain(w, n, x):
 
 def perceptronOutput(w, x):
     # w: Array de pesos [w0, w1, w2, ...]
-    # x: Linha de entradas sem coluna yd [x0, x1, x2, ...]
+    # x: Linha de entradas [x0, x1, x2, ...]
 
     sum = 0.0
     for i in range(len(w)):
@@ -54,13 +53,14 @@ def perceptronOutput(w, x):
     print("y:", y)
 
 # Entradas
-w = [-0.5, 0.4, -0.6, 0.6]
-n = 0.3
-x = [[1, 0, 0, 1, 0], [1, 1, 1, 0, 1]]
-inputs = [[1, 1, 1, 1], [1, 0, 0, 0], [1, 1, 0, 0], [1, 0, 1, 1]]
+w = [0, 0, 0, 0]
+n = 1
+x = [[1, 0, 0, 1], [1, 1, 0, 1], [1, 0, 0, 0], [1, 1, 1, 0], [1, 0, 1, 1], [1, 1, 0, 0]]
+yd = [0, 1, 0, 1, 0, 1]
+inputs = [[1, 1, 1, 1], [1, 0, 1, 0]]
 
 print("---Treinamento---")
-perceptronTrain(w, n, x)
+perceptronTrain(w, n, x, yd)
 
 print("\n---Novas Entradas---")
 for i in inputs:
